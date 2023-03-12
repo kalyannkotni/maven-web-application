@@ -43,6 +43,24 @@ stages{
   }
   }
   
+  stage('Build Docker Image'){
+  steps{
+  script{
+     sh 'docker build -t <dockerhubusername>/<imagename> .'
+   }
+   }
+   }
+   stage('Deploy Docker Image'){
+   steps {
+      script {
+                 withCredentials([string(credentialsId: 'dockerhub-pwd', variable: 'dockerhubpwd')]) {
+                    sh 'docker login -u <dockerhubusername> -p ${dockerhubpwd}'
+                 }  
+                 sh 'docker push <dockerhubusername>/<imagename>'
+                }
+            }
+        }
+  
   stage('DeployAppIntoTomcat'){
   steps{
   sshagent(['bfe1b3c1-c29b-4a4d-b97a-c068b7748cd0']) {
@@ -51,6 +69,8 @@ stages{
   }
   }
   */
+	
+  
 }//Stages Closing
 
 post{
