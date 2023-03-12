@@ -5,7 +5,7 @@ node {
     echo "Jenkins url is: ${env.JENKINS_URL}"
     echo "Node Name is: ${env.NODE_NAME}"
 
-properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '5', daysToKeepStr: '', numToKeepStr: '5'))])
+    properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '5', daysToKeepStr: '', numToKeepStr: '5'))])
 
     stage('CheckOutCode') {
         git credentialsId: '66549094-58fd-4e9c-b3cf-12803125ed5e', url: 'https://github.com/kalyanjyoo/maven-web-application.git'
@@ -22,7 +22,7 @@ properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKe
     stage('UploadArtifcatsIntoArtifactoryRepo') {
         sh "${mavenHome}/bin/mvn clean deploy"
     }
-    
+
     /*
     stage('DeployAppintoTomcatServer') {
         sshagent(['a0d60583-c453-4631-bda0-0a04bf95a401']) {
@@ -30,9 +30,15 @@ properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKe
         }
     }
     */
-    stage('Build Docker Image'){
+    stage('Build Docker Image') {
         sh "docker build -t kalyankotni/image-01 ."
-   }
-   
-}
+    }
 
+    stage('Deploy Docker Image') {
+        withCredentials([string(credentialsId: 'dockerhub_id', variable: 'dockerhubpwd')]) {
+            sh "docker login -u kalyankotni -p ${dockerhubpwd}"
+        }
+        sh "docker push kalyankotni/image-01"
+    }
+
+}
