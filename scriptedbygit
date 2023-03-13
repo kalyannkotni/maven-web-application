@@ -30,15 +30,16 @@ node {
         }
     }
     */
+    
     stage('Build Docker Image') {
-        sh "docker build -t kalyankotni/image-01 ."
+        sh "docker build -t kalyankotni/image-01:1 ."
     }
 
     stage('Deploy Docker Image') {
         withCredentials([string(credentialsId: 'dockerhub_id', variable: 'dockerhubpwd')]) {
             sh "docker login -u kalyankotni -p ${dockerhubpwd}"
         }
-        sh "docker push kalyankotni/image-01"
+        sh "docker push kalyankotni/image-01:1"
     }
 
 }
