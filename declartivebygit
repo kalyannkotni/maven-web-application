@@ -41,7 +41,7 @@ pipeline {
                 sh  "mvn clean deploy"
             }
         }
-
+        /*
         stage('DeployAppintoTomcatServer') {
             steps {
                 sshagent(['a0d60583-c453-4631-bda0-0a04bf95a401']) {
@@ -49,5 +49,21 @@ pipeline {
                 }
             }
         }
+        */
+        stage('Build Docker Image') {
+            steps {
+                sh "docker build -t kalyankotni/image-01:1 ."
+            }
+        }
+        
+        stage('Deploy Docker Image') {
+            steps {
+                withCredentials([string(credentialsId: 'dockerhub_id', variable: 'dockerhubpwd')]) {
+                    sh "docker login -u kalyankotni -p ${dockerhubpwd}"
+                }
+                sh "docker push kalyankotni/image-01:1"
+            }
+        }
+
     }
 }
