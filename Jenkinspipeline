@@ -1,38 +1,46 @@
-node{
+node {
 
-def mavenHome = tool name: "maven3.8.6"
+    def mavenHome = tool name: "maven-3.8.2"
 
-echo "Jenkins url is: ${env.JENKINS_URL}"
-echo "Node Name is: ${env.NODE_NAME}"
-echo "Job name is: ${env.JOB_NAME}"
+    echo "Jenkins url is: ${env.JENKINS_URL}"
+    echo "Node Name is: ${env.NODE_NAME}"
 
+    properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '5', daysToKeepStr: '', numToKeepStr: '5'))])
 
+    stage('CheckOutCode') {
+        git credentialsId: '81a7bc69-4217-42b5-abb9-2408dc88549f', url: 'https://github.com/kalyannkotni/maven-web-application.git'
+    }
 
+    stage('Build') {
+        sh "${mavenHome}/bin/mvn clean package"
+    }
 
-properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '5', daysToKeepStr: '', numToKeepStr: '5')), [$class: 'JobLocalConfiguration', changeReasonComment: ''], pipelineTriggers([pollSCM('* * * * *')])])
+    /*
+    stage('ExecuteSonarQubeReport') {
+        sh "${mavenHome}/bin/mvn clean sonar:sonar"
+    }
 
+    stage('UploadArtifcatsIntoArtifactoryRepo') {
+        sh "${mavenHome}/bin/mvn clean deploy"
+    }
+    */
+    stage('DeployAppintoTomcatServer') {
+        sshagent(['dcb726d5-34f5-4c03-8506-2178037f778f']) {
+            sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@3.12.108.85:/opt/tomcat9/webapps/"
+        }
+    }
+    
+    /*
+    stage('Build Docker Image') {
+        sh "docker build -t kalyankotni/image-01:1 ."
+    }
 
-
-stage('CheckOutCode'){
-git branch: 'development', credentialsId: '166c70a2-1df5-4993-a566-0a795862da8c', url: 'https://github.com/MithunTechnologiesDevOps/maven-web-application.git'
-}
-
-stage('Build'){
-sh "${mavenHome}/bin/mvn clean package"
-}
-
-stage('ExecuteSonarQubeReport'){
-sh "${mavenHome}/bin/mvn clean sonar:sonar"
-}
-
-stage('UploadArtifcatsIntoArtifactoryRepo'){
-sh "${mavenHome}/bin/mvn clean deploy"
-}
-
-stage('DeployAppIntoTomcatServer'){
-sshagent(['dc292b7a-3b39-4630-9fc3-1b806b54412c']) {
- sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war  ec2-user@172.31.7.80:/opt/apache-tomcat-9.0.65/webapps/"
-}
-}
+    stage('Deploy Docker Image') {
+        withCredentials([string(credentialsId: 'dockerhub_id', variable: 'dockerhubpwd')]) {
+            sh "docker login -u kalyankotni -p ${dockerhubpwd}"
+        }
+        sh "docker push kalyankotni/image-01:1"
+    }
+    */
 
 }
