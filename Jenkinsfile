@@ -56,6 +56,11 @@ pipeline {
             }
         }
         
-
+        stage('Deploy to k8') {
+            steps {
+                
+            }
+        }
+        
     }
 }
