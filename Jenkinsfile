@@ -43,7 +43,7 @@ pipeline {
         */
         stage('Build Docker Image') {
             steps {
-                sh "docker build -t kalyankotni/image-01:1 ."
+                sh "docker build -t kalyankotni/maven-web-application ."
             }
         }
         
@@ -52,7 +52,7 @@ pipeline {
                 withCredentials([string(credentialsId: 'dockerhub_idd', variable: 'dockerhubpwd')]) {
                     sh "docker login -u kalyankotni -p ${dockerhubpwd}"
                 }
-                sh "docker push kalyankotni/image-01:1"
+                sh "docker push kalyankotni/maven-web-application"
             }
         }
         
