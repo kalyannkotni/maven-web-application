@@ -40,7 +40,7 @@ pipeline {
                 }
             }
         }
-        
+        */
         stage('Build Docker Image') {
             steps {
                 sh "docker build -t kalyankotni/image-01:1 ."
@@ -55,7 +55,7 @@ pipeline {
                 sh "docker push kalyankotni/image-01:1"
             }
         }
-        */
+        
 
     }
 }
