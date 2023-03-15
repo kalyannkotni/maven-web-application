@@ -20,8 +20,7 @@ pipeline {
 
         stage('CheckOutCode') {
             steps {
-                git credentialsId: '66549094-58fd-4e9c-b3cf-12803125ed5e', url: 'https://github.com/kalyanjyoo/maven-web-application.git'
-            }
+                git credentialsId: '81a7bc69-4217-42b5-abb9-2408dc88549f', url: 'https://github.com/kalyannkotni/maven-web-application.git'            }
         }
 
         stage('Build') {
@@ -41,15 +40,15 @@ pipeline {
                 sh  "mvn clean deploy"
             }
         }
-        /*
+        
         stage('DeployAppintoTomcatServer') {
             steps {
-                sshagent(['a0d60583-c453-4631-bda0-0a04bf95a401']) {
-                    sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@13.235.48.171:/opt/tomcat9/webapps/"
+                sshagent(['dcb726d5-34f5-4c03-8506-2178037f778f']) {
+                    sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@3.12.108.85:/opt/tomcat9/webapps/"
                 }
             }
         }
-        */
+        /*
         stage('Build Docker Image') {
             steps {
                 sh "docker build -t kalyankotni/image-01:1 ."
@@ -64,6 +63,7 @@ pipeline {
                 sh "docker push kalyankotni/image-01:1"
             }
         }
+        */
 
     }
 }
