@@ -58,7 +58,7 @@ pipeline {
         
         stage('Deploy to k8') {
             steps {
-                
+                kubernetesDeploy (configs: 'mavenwebappdeployment.yaml', kubeconfigId: 'kubeconfigg')
             }
         }
         
