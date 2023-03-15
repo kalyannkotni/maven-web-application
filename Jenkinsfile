@@ -32,6 +32,7 @@ pipeline {
             }
         }
         
+        /*
         stage('DeployAppintoTomcatServer') {
             steps {
                 sshagent(['dcb726d5-34f5-4c03-8506-2178037f778f']) {
@@ -39,7 +40,7 @@ pipeline {
                 }
             }
         }
-        /*
+        
         stage('Build Docker Image') {
             steps {
                 sh "docker build -t kalyankotni/image-01:1 ."
