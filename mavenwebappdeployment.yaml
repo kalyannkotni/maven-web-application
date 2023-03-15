@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mavenwebappdeployment
+  name: mavenwebapplication
 spec:
   revisionHistoryLimit: 10
   replicas: 2
@@ -9,16 +9,16 @@ spec:
     type: Recreate
   selector:
     matchLabels:
-      app: mavenwebapp
+      app: mavenwebappp
   template:
     metadata:
-      name: mavenwebapppod
+      name: mavenwebappppod
       labels:
-        app: mavenwebapp
+        app: mavenwebappp
     spec:
       containers:
-        - name: mavenwebappcontainer
-          image: kalyankotni/image-01:1
+        - name: mavenwebapppconatainer
+          image: kalyankotni/maven-web-application
           ports:
             - containerPort: 8080
           resources:
@@ -32,10 +32,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: mavenwebappsvc
+  name: mavenwebapppsvc
 spec:
   selector:
-    app: mavenwebapp
+    app: mavenwebappp
   type: NodePort
   ports:
   - port: 80
