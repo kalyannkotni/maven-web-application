@@ -49,7 +49,7 @@ pipeline {
         
         stage('Deploy Docker Image') {
             steps {
-                withCredentials([string(credentialsId: 'dockerhub_id', variable: 'dockerhubpwd')]) {
+                withCredentials([string(credentialsId: 'dockerhub_idd', variable: 'dockerhubpwd')]) {
                     sh "docker login -u kalyankotni -p ${dockerhubpwd}"
                 }
                 sh "docker push kalyankotni/image-01:1"
