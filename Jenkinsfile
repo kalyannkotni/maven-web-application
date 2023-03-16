@@ -61,6 +61,6 @@ pipeline {
                 kubernetesDeploy (configs: 'mavenwebappdeployment.yaml', kubeconfigId: 'kubeconfigg')
             }
         }
-        
+        */
     }
 }
