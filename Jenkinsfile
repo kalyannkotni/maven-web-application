@@ -64,10 +64,3 @@ pipeline {
         */
     }
 }
-stage('Generate YAML'){
-    steps{
-        script{
-            writeFile file: 'Jenkinsfile.yaml', text: pipelineAsYaml()
-        }
-    }
-}
